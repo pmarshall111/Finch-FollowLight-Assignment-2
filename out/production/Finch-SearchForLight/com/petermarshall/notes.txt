@@ -1,0 +1,4 @@
+Plan:
+
+- Make it so finch has to be level for a second before starting
+- Add in ability to tap and make it keep a set distance by using varying speed.
