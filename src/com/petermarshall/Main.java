@@ -8,5 +8,6 @@ public class Main {
 	// write your code here
         Finch sharedfinch = new Finch();
         SearchForLight.start(sharedfinch);
+//        sharedfinch.setWheelVelocities(255,-255);
     }
 }

@@ -1,4 +1,24 @@
 Plan:
 
-- Make it so finch has to be level for a second before starting
-- Add in ability to tap and make it keep a set distance by using varying speed.
+- Definitely going to need better maths for how fast our finch is going. We only really get up to about 150 wheel vel.
+So only 60% of max speed. Rather disappointing.
+
+- Potentially need to try it out in rooms of different ambient lights. Could forsee a situation where I take in my Finch to show but have only tested the program in dark rooms
+so the light doesn't work so well.
+
+
+Could do something simple like just making it go 255 if far and 0 if close
+
+As the intensity nears the min intensity needed for light detection we need to go super fast.
+
+
+Changes we need to make.
+
+- Ideally if it loses the light we must assume that it has gone out of range and shoot forward till we find it?
+- Smoother operation?
+- Do we want to dynamically set the min light intensity depending on the environment???
+- Split finchFollow into 2 funcs
+- Decide whether we want to keep this finchKeepDistance, or perhaps do something like finchInterested, finchScared. Where it turns around and runs away from the light. Definitely keep
+the keepDistance around though in case we want to do something with it.
+- Potentially an opportunity to add an additional circuit on top of the finch with a switch, which could activate the thermometer? What would that do???
+- Change in light intensity needs to be brighter and proportional to how different it is to the minimum light intensity we're looking to catch
