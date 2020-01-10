@@ -1,6 +1,6 @@
 package com.petermarshall;
 
-import com.github.freva.asciitable.AsciiTable;
+//import com.github.freva.asciitable.AsciiTable;
 import edu.cmu.ri.createlab.terk.robot.finch.Finch;
 
 import java.awt.*;
@@ -14,20 +14,26 @@ public class SearchForLight {
     private static FinchState finchState;
     private static int finchIntensityToMatch;
 
-    private static ArrayList<Integer> lightReadings;
-    private static long scriptStartTime;
-    private static int numbDetections;
+    static ArrayList<Integer> lightReadings;
+    static long scriptStartTime;
+    static int numbDetections;
 
-    private static final int MIN_LIGHT_INTENSITY = 80;
+    private static final int MIN_LIGHT_DETECT = 80;
 
-    private static final int MAX_WHEEL_VEL = 255;
-    private static final int MIN_WHEEL_VEL = -255;
+    static final int MIN_LIGHT_INTENSITY = 0;
+    static final int MAX_LIGHT_INTENSITY = 100;
+
+    static final int MAX_WHEEL_VEL = 255;
+    static final int MIN_WHEEL_VEL = -255;
     private static final int BASE_WHEEL_VEL = 100;
 
     private static int currLeftVel;
     private static int currRightVel;
 
-    private static ArrayList<SpeedLightStats> stats;
+    static ArrayList<SpeedLightStats> stats;
+    static IntSummaryStatistics lightSummary;
+
+    static boolean END_RUN = false;
 
 
     public static void start(Finch sharedFinch) {
@@ -40,6 +46,7 @@ public class SearchForLight {
 
     private static void waitForFinchToBeLevel() {
         long timeLastMoved = System.nanoTime();
+        finch.setLED(Color.BLUE);
 
         while (notStillForXSeconds(timeLastMoved, 3)) {
             if (finchIsntLevel()) {
@@ -56,8 +63,10 @@ public class SearchForLight {
         return !finch.isFinchLevel();
     }
 
-    private static boolean finchsBeakIsntUp() {
-        return !finch.isBeakUp();
+    private static void checkFinchBeakUp() {
+        if (finch.isBeakUp()) {
+            END_RUN = true;
+        }
     }
 
     private static void init(){
@@ -76,12 +85,13 @@ public class SearchForLight {
         currRightVel = 0;
 
         stats = new ArrayList<>();
+        lightSummary = new IntSummaryStatistics();
     }
 
     private static void detectLight() {
         long prevTime = System.nanoTime();
 
-        while (finchsBeakIsntUp()) {
+        while (!END_RUN) {
             if (finchDetectsLight()) {
                 finchFollow();
                 prevTime = System.nanoTime();
@@ -91,13 +101,69 @@ public class SearchForLight {
             } else {
                 //if we've lost our light and it's not been 4 seconds yet, we want to shoot forward in desperation to find it?
                 //or do we lower the min light intensity???
+
+//                finchDesperate();
             }
 
             recordLightReadings();
+            checkFinchBeakUp();
         }
 
-        showStats();
+//        showStats();
         finch.quit();
+    }
+
+    //to be called when the light has been lost, but 4 seconds have not yet passed.
+//    private static void finchDesperate() {
+//        //perhaps a good idea at the start would be to do a full circle to see if it sees the light again?
+//
+//
+//        //will go back through light reading history until we last saw the light.
+//        //then we go back for a bit more and see how the pattern of the light changes. Expecting 3 basic patterns:
+//        // - goes forwards out of range (shown by both light sensors decreasing at roughly same intervals)
+//        // - goes right out of range (shown by left sensor decreasing faster)
+//        // - ^^ same for LHS
+//
+//        //thinking is that if it goes backwards out of range the finch would have time to make a turn and so actually it would be to one side out of range.
+//
+//        //potentially we take into account how long ago we last saw the light was?? Anything more than 2 seconds and it's probably pretty useless.
+//        //TODO: test for how long we should do this for.
+//
+//        //thought... what do we do when we've already taken action and it hasn't found it. i presume that through this method we will jsut go in circles.
+//        //perhaps we can solve by timing out... but then we wouldn't be able to detect new light.
+//        //perhaps a locking wheels idea? or maybe this method only gets called once every so often.
+//        //fuck it lets just make it and then experiment.
+//
+//
+//        SpeedLightStats currStats = stats.get(stats.size()-1);
+//        int indexFromEnd = findLastLight();
+//        SpeedLightStats lastDetection = stats.get(stats.size() - indexFromEnd);
+//
+//        //now we can get a rough direction
+//        SpeedLightStats fiveBeforeLastDetection = stats.get(stats.size() - indexFromEnd - 5);
+//
+//        //if we go through the most recent ones before this, how can we establish how the light is moving??
+//        int leftDiff = lastDetection.getLeftLightIntensity() - fiveBeforeLastDetection.getLeftLightIntensity();
+//        int rightDiff = lastDetection.getRightLightIntensity() - fiveBeforeLastDetection.getRightLightIntensity();
+//
+//        if (leftDiff < rightDiff) {
+//            //TODO: think through what the the left and right diff mean in terms of positive and negative and decide what to do with each.
+//        }
+//    }
+//
+//    private static int findLastLight() {
+//        int subtractFromSize = 2; //no point going to the last entry as we know that we did not see light otherwise we wouldn't be in this function
+//        SpeedLightStats historicStats = stats.get(stats.size()-subtractFromSize);
+//
+//        while (!lightAboveMinThreshold(historicStats)) {
+//            historicStats = stats.get(stats.size() - --subtractFromSize);
+//        }
+//
+//        return subtractFromSize;
+//    }
+
+    private static boolean lightAboveMinThreshold(SpeedLightStats stats) {
+        return Math.max(stats.getLeftLightIntensity(), stats.getRightLightIntensity()) >= MIN_LIGHT_DETECT;
     }
 
     private static void showStats() {
@@ -105,14 +171,19 @@ public class SearchForLight {
     }
 
     private static boolean finchDetectsLight() {
-        return (finch.isLeftLightSensor(MIN_LIGHT_INTENSITY) || finch.isRightLightSensor(MIN_LIGHT_INTENSITY));
+        return (finch.isLeftLightSensor(MIN_LIGHT_DETECT) || finch.isRightLightSensor(MIN_LIGHT_DETECT));
     }
 
     private static void recordLightReadings() {
-        lightReadings.add(finch.getLeftLightSensor());
+        lightReadings.add(finch.getLeftLightSensor()); //TODO: possible redundancy now.
         lightReadings.add(finch.getRightLightSensor());
 
-        stats.add(new SpeedLightStats(finch.getLeftLightSensor(), finch.getRightLightSensor(), currLeftVel, currRightVel));
+        int left = finch.getLeftLightSensor();
+        int right = finch.getRightLightSensor();
+
+        stats.add(new SpeedLightStats(left, right, currLeftVel, currRightVel, finchState));
+        lightSummary.accept(left);
+        lightSummary.accept(right);
     }
 
     //TODO: definitely needs tidying up.
@@ -158,7 +229,7 @@ public class SearchForLight {
             int lightAt2cm = 200;
 
             //i think first we must focus on keeping the light the same distance.
-            int maxLightDiff = lightAt2cm - MIN_LIGHT_INTENSITY;
+            int maxLightDiff = lightAt2cm - MIN_LIGHT_DETECT;
 
             SpeedLightStats mostRecent = stats.get(stats.size()-1);
             SpeedLightStats previous = stats.get(stats.size()-2);
@@ -196,7 +267,7 @@ public class SearchForLight {
             finch.setWheelVelocities(currLeftVel, currRightVel);
         }
 
-        System.out.println(finch.getLeftLightSensor() + " | " + finch.getRightLightSensor());
+//        System.out.println(finch.getLeftLightSensor() + " | " + finch.getRightLightSensor());
 
 
     }
@@ -242,7 +313,7 @@ public class SearchForLight {
     }
 
     private static int atLeast20PercAboveMinLight(int lightReading) {
-        int newMinLight = (int) (MIN_LIGHT_INTENSITY * 1.2);
+        int newMinLight = (int) (MIN_LIGHT_DETECT * 1.2);
 
         if (lightReading < newMinLight) {
             return newMinLight;
@@ -294,28 +365,31 @@ public class SearchForLight {
     }
 
     private static String getStatsTable() {
-        IntSummaryStatistics summary = lightReadings.stream().mapToInt(Integer::intValue).summaryStatistics();
+//        IntSummaryStatistics summary = lightReadings.stream().mapToInt(Integer::intValue).summaryStatistics();
+//
+//        int maxLightVal = summary.getMax();
+//        int minLightVal = summary.getMin();
+//        double avg = summary.getAverage();
+//        long scriptDuration = System.nanoTime() - scriptStartTime;
+//
+//        long minutes = TimeUnit.NANOSECONDS.toMinutes(scriptDuration);
+//        long seconds = TimeUnit.NANOSECONDS.toSeconds(scriptDuration) - minutes*60;
+//
+//        String[][] rows = {
+//                {"Left light sensor at beginning", lightReadings.get(0)+""},
+//                {"Right light sensor at beginning", lightReadings.get(1)+""},
+//                {"",""},
+//                {"Highest sensor reading", maxLightVal+""},
+//                {"Lowest sensor reading", minLightVal+""},
+//                {"Average sensor reading", String.format("%.1f",avg)}, //need to know how this works fully before viva. rounds to 1dp
+//                {"",""},
+//                {"Script duration", String.format("%1dm %2ds", minutes, seconds)},
+//                {"Numb detections", numbDetections+""}
+//        };
+//
+//        return AsciiTable.getTable(rows);
 
-        int maxLightVal = summary.getMax();
-        int minLightVal = summary.getMin();
-        double avg = summary.getAverage();
-        long scriptDuration = System.nanoTime() - scriptStartTime;
-
-        long minutes = TimeUnit.NANOSECONDS.toMinutes(scriptDuration);
-        long seconds = TimeUnit.NANOSECONDS.toSeconds(scriptDuration) - minutes*60;
-
-        String[][] rows = {
-                {"Left light sensor at beginning", lightReadings.get(0)+""},
-                {"Right light sensor at beginning", lightReadings.get(1)+""},
-                {"",""},
-                {"Highest sensor reading", maxLightVal+""},
-                {"Lowest sensor reading", minLightVal+""},
-                {"Average sensor reading", String.format("%.1f",avg)}, //need to know how this works fully before viva. rounds to 1dp
-                {"",""},
-                {"Script duration", String.format("%1dm %2ds", minutes, seconds)},
-                {"Numb detections", numbDetections+""}
-        };
-
-        return AsciiTable.getTable(rows);
+        return "Output table removed for testing purposes of UI. Uncomment to restore.";
     }
+
 }
