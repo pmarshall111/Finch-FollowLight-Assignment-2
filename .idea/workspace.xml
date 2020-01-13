@@ -2,12 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b5229f24-4ec6-411c-9c40-0fb6463f2150" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/petermarshall/FinchState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/petermarshall/FinchState.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/petermarshall/LightInterfaceThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/petermarshall/LightInterfaceThread.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/petermarshall/SearchForLight.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/petermarshall/SearchForLight.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/petermarshall/SpeedLightStats.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/petermarshall/SpeedLightStats.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/petermarshall/StateStats.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/petermarshall/TimeInStates.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -58,8 +53,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/petermarshall/SearchForLight.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="5106">
-              <caret line="309" column="29" lean-forward="true" selection-start-line="309" selection-start-column="29" selection-end-line="309" selection-end-column="29" />
+            <state relative-caret-position="567">
+              <caret line="38" column="49" lean-forward="true" selection-start-line="38" selection-start-column="49" selection-end-line="38" selection-end-column="49" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -249,7 +244,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1578947412443" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1578948400706" />
     <property name="last_opened_file_path" value="$USER_HOME$/Downloads/jar_files (2)/ascii-table-1.1.0.jar!/" />
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.15" />
@@ -462,8 +457,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/petermarshall/SearchForLight.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5106">
-          <caret line="309" column="29" lean-forward="true" selection-start-line="309" selection-start-column="29" selection-end-line="309" selection-end-column="29" />
+        <state relative-caret-position="567">
+          <caret line="38" column="49" lean-forward="true" selection-start-line="38" selection-start-column="49" selection-end-line="38" selection-end-column="49" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

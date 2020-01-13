@@ -41,13 +41,13 @@ public class SearchForLight {
 
         init();
         waitForFinchToBeLevel();
+        beginSearching();
         detectLight();
         stopFinch();
     }
 
     private static void waitForFinchToBeLevel() {
         long timeLastMoved = System.nanoTime();
-        finch.setLED(Color.BLUE);
 
         while (notStillForXSeconds(timeLastMoved, 3)) {
             if (finchIsntLevel()) {
@@ -79,9 +79,8 @@ public class SearchForLight {
         scriptStartTime = System.nanoTime(); //function allows for time period of 292years. So no worrying about overflows.
         numbDetections = 0;
 
-        finch.setWheelVelocities(BASE_WHEEL_VEL,BASE_WHEEL_VEL); //max values +/-255
-        finch.setLED(Color.YELLOW);
         finchState = FinchState.WAITING_TO_BE_LEVEL;
+        finch.setLED(Color.BLUE);
 
         currLeftVel = 0;
         currRightVel = 0;
@@ -116,6 +115,12 @@ public class SearchForLight {
 
 //        showStats();
 //        finch.quit();
+    }
+
+    private static void beginSearching() {
+        finchState = FinchState.SEARCH;
+        finch.setLED(Color.YELLOW);
+        moveForwardLowSpeed();
     }
 
     private static void stopFinch() {
@@ -346,11 +351,20 @@ public class SearchForLight {
         finch.setWheelVelocities(0,0);
         sleep(500);
 
+        turnFinch90Deg();
+        moveForwardLowSpeed();
+    }
+
+    private static void turnFinch90Deg() {
         int multiplier = (int) Math.round(Math.random());
         currLeftVel = multiplier * BASE_WHEEL_VEL;
         currRightVel = Math.abs(multiplier-1) * BASE_WHEEL_VEL;
         finch.setWheelVelocities(currLeftVel, currRightVel, 3000); //values to be played around with to get roughly 90degs.
+    }
 
+    private static void moveForwardLowSpeed() {
+        //TODO: why do we need static variables for the left and right velocity?
+        //possible better way to just record the light readings along with the velocity whenever we change the speed.
         currLeftVel = BASE_WHEEL_VEL;
         currRightVel = BASE_WHEEL_VEL;
         finch.setWheelVelocities(currLeftVel,currRightVel);
