@@ -6,7 +6,6 @@ import edu.cmu.ri.createlab.terk.robot.finch.Finch;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.IntSummaryStatistics;
-import java.util.concurrent.TimeUnit;
 
 public class SearchForLight {
 
@@ -31,7 +30,8 @@ public class SearchForLight {
     private static int currRightVel;
 
     static ArrayList<SpeedLightStats> stats;
-    static IntSummaryStatistics lightSummary;
+    static IntSummaryStatistics leftLightSummary;
+    static IntSummaryStatistics rightLightSummary;
 
     static boolean END_RUN = false;
 
@@ -39,9 +39,10 @@ public class SearchForLight {
     public static void start(Finch sharedFinch) {
         finch = sharedFinch;
 
-        waitForFinchToBeLevel();
         init();
+        waitForFinchToBeLevel();
         detectLight();
+        stopFinch();
     }
 
     private static void waitForFinchToBeLevel() {
@@ -51,6 +52,7 @@ public class SearchForLight {
         while (notStillForXSeconds(timeLastMoved, 3)) {
             if (finchIsntLevel()) {
                 timeLastMoved = System.nanoTime();
+                recordLightReadings();
             }
         }
     }
@@ -79,13 +81,15 @@ public class SearchForLight {
 
         finch.setWheelVelocities(BASE_WHEEL_VEL,BASE_WHEEL_VEL); //max values +/-255
         finch.setLED(Color.YELLOW);
-        finchState = FinchState.SEARCH;
+        finchState = FinchState.WAITING_TO_BE_LEVEL;
 
         currLeftVel = 0;
         currRightVel = 0;
 
         stats = new ArrayList<>();
-        lightSummary = new IntSummaryStatistics();
+        leftLightSummary = new IntSummaryStatistics();
+        rightLightSummary = new IntSummaryStatistics();
+        recordLightReadings();
     }
 
     private static void detectLight() {
@@ -108,9 +112,15 @@ public class SearchForLight {
             recordLightReadings();
             checkFinchBeakUp();
         }
+        System.out.println("Ending run");
 
 //        showStats();
-        finch.quit();
+//        finch.quit();
+    }
+
+    private static void stopFinch() {
+        finch.setWheelVelocities(0,0);
+        finch.setLED(Color.black, 0);
     }
 
     //to be called when the light has been lost, but 4 seconds have not yet passed.
@@ -181,9 +191,9 @@ public class SearchForLight {
         int left = finch.getLeftLightSensor();
         int right = finch.getRightLightSensor();
 
-        stats.add(new SpeedLightStats(left, right, currLeftVel, currRightVel, finchState));
-        lightSummary.accept(left);
-        lightSummary.accept(right);
+        stats.add(new SpeedLightStats(left, right, currLeftVel, currRightVel, finchState, System.nanoTime()));
+        leftLightSummary.accept(left);
+        rightLightSummary.accept(right);
     }
 
     //TODO: definitely needs tidying up.
@@ -295,7 +305,7 @@ public class SearchForLight {
 
 
     private static void addNumbDetections() {
-        if (finchState.equals(FinchState.SEARCH)) {
+        if (!finchState.equals(FinchState.FOLLOWING)) {
             finchState = FinchState.FOLLOWING;
             numbDetections++;
         }

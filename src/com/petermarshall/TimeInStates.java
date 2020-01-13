@@ -1,6 +1,6 @@
 package com.petermarshall;
 
-public class StateStats {
+public class TimeInStates {
     private long followingTime;
     private long searchingTime;
 

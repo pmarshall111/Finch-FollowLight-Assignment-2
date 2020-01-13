@@ -3,7 +3,8 @@ package com.petermarshall;
 public enum FinchState {
     FOLLOWING,
     KEEP_DISTANCE,
-    SEARCH;
+    SEARCH,
+    WAITING_TO_BE_LEVEL;
 
     public static FinchState swapFollowAndKeepDist(FinchState state) {
         if (state.equals(FinchState.FOLLOWING)) {
