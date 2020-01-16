@@ -30,4 +30,8 @@ public class TimeInStates {
     public long getWaitingTime() {
         return waitingTime;
     }
+
+    public long getTotalRecordedTime() {
+        return followingTime + searchingTime + waitingTime;
+    }
 }
