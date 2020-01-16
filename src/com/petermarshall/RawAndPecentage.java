@@ -1,5 +1,7 @@
 package com.petermarshall;
 
+import java.math.BigDecimal;
+
 public class RawAndPecentage {
     private double percentage;
     private int raw;
@@ -9,13 +11,8 @@ public class RawAndPecentage {
         this.raw = raw;
     }
 
-    RawAndPecentage(double percentage, int raw) {
-        this.percentage = percentage;
-        this.raw = raw;
-    }
-
-    public double getPercentage() {
-        return percentage;
+    public int getPercentage() {
+        return (int) percentage;
     }
 
     public int getRaw() {
@@ -26,8 +23,8 @@ public class RawAndPecentage {
     private static double convertRawToPerc(int raw, int max, int min) {
         if (min < 0) {
             raw += Math.abs(min);
-            min = 0;
             max += Math.abs(min);
+            min = 0;
         }
 
         return 100*raw / ((double)(min+max));

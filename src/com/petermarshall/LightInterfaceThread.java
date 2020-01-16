@@ -33,10 +33,14 @@ public class LightInterfaceThread extends Thread {
 //        sharedFinch.quit();
     }
 
+    public static boolean isRunning() {
+        return !SearchForLight.END_RUN;
+    }
+
     //TODO: will also need methods to get the live data out to the UI
 
     public static long getTimeElapsedInNS() throws NullPointerException {
-        return SearchForLight.scriptStartTime - getMostRecentStats().getTimestamp();
+        return getMostRecentStats().getTimestamp() - SearchForLight.scriptStartTime;
     }
 
     //throws NullPointerException just in case we request the stats before the run has started.
@@ -103,19 +107,18 @@ public class LightInterfaceThread extends Thread {
 
     public static TimeInStates getTimeInEachState() {
         TimeInStates collectedStats = new TimeInStates();
-        long lastTimestamp = getFirstStat().getTimestamp();
 
-        for (int i = 1; i<SearchForLight.stats.size(); i++) {
+        for (int i = 0; i<SearchForLight.stats.size()-1; i++) {
             SpeedLightStats currStats = SearchForLight.stats.get(i);
-            addTimeInState(lastTimestamp, currStats, collectedStats);
-            lastTimestamp = currStats.getTimestamp();
+            SpeedLightStats nextStats = SearchForLight.stats.get(i+1);
+            addTimeInState(currStats, nextStats, collectedStats);
         }
         return collectedStats;
     }
 
-    private static void addTimeInState(long lastTimestamp, SpeedLightStats stats, TimeInStates collectedStats) {
-        FinchState state = stats.getCurrState();
-        long timeElapsed = stats.getTimestamp() - lastTimestamp;
+    private static void addTimeInState(SpeedLightStats currStats, SpeedLightStats nextStats, TimeInStates collectedStats) {
+        FinchState state = currStats.getCurrState();
+        long timeElapsed = nextStats.getTimestamp() - currStats.getTimestamp();
         collectedStats.addTime(timeElapsed, state);
     }
 

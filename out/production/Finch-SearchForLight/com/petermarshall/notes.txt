@@ -12,7 +12,13 @@ Could do something simple like just making it go 255 if far and 0 if close
 As the intensity nears the min intensity needed for light detection we need to go super fast.
 
 
-TODO:
+Changes we need to make.
 
-1. Ensure stats arraylist is working
-2. Make a func to go through the previous iteration and see if the light level is increasing or decreasing.
+- Ideally if it loses the light we must assume that it has gone out of range and shoot forward till we find it?
+- Smoother operation?
+- Do we want to dynamically set the min light intensity depending on the environment???
+- Split finchFollow into 2 funcs
+- Decide whether we want to keep this finchKeepDistance, or perhaps do something like finchInterested, finchScared. Where it turns around and runs away from the light. Definitely keep
+the keepDistance around though in case we want to do something with it.
+- Potentially an opportunity to add an additional circuit on top of the finch with a switch, which could activate the thermometer? What would that do???
+- Change in light intensity needs to be brighter and proportional to how different it is to the minimum light intensity we're looking to catch

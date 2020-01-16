@@ -3,6 +3,7 @@ package com.petermarshall;
 public class TimeInStates {
     private long followingTime;
     private long searchingTime;
+    private long waitingTime;
 
     public void addTime(long t, FinchState state) {
         switch(state) {
@@ -12,6 +13,9 @@ public class TimeInStates {
             case SEARCH:
                 searchingTime += t;
                 break;
+            case WAITING_TO_BE_LEVEL:
+                waitingTime += t;
+
         }
     }
 
@@ -21,5 +25,9 @@ public class TimeInStates {
 
     public long getSearchingTime() {
         return searchingTime;
+    }
+
+    public long getWaitingTime() {
+        return waitingTime;
     }
 }

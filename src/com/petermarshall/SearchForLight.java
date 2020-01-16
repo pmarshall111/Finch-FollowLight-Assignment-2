@@ -20,7 +20,7 @@ public class SearchForLight {
     private static final int MIN_LIGHT_DETECT = 80;
 
     static final int MIN_LIGHT_INTENSITY = 0;
-    static final int MAX_LIGHT_INTENSITY = 100;
+    static final int MAX_LIGHT_INTENSITY = 255;
 
     static final int MAX_WHEEL_VEL = 255;
     static final int MIN_WHEEL_VEL = -255;
@@ -52,8 +52,8 @@ public class SearchForLight {
         while (notStillForXSeconds(timeLastMoved, 3)) {
             if (finchIsntLevel()) {
                 timeLastMoved = System.nanoTime();
-                recordLightReadings();
             }
+            recordLightReadings();
         }
     }
 
@@ -356,11 +356,21 @@ public class SearchForLight {
     }
 
     private static void turnFinch90Deg() {
+        //TODO: make quicker by having 1 wheel go backwards.
         int multiplier = (int) Math.round(Math.random());
         currLeftVel = multiplier * BASE_WHEEL_VEL;
         currRightVel = Math.abs(multiplier-1) * BASE_WHEEL_VEL;
-        finch.setWheelVelocities(currLeftVel, currRightVel, 3000); //values to be played around with to get roughly 90degs.
+
+        //NOTE: cannot use built in method to hold wheel velocities for a certain amount of time as this blocks the thread
+        //execution. Can't do this as we want to record values at all times.
+        long startTime = System.nanoTime();
+        while (!xSecondsPassed(startTime, 3)) {
+            finch.setWheelVelocities(currLeftVel, currRightVel);
+            recordLightReadings();
+        }
     }
+
+
 
     private static void moveForwardLowSpeed() {
         //TODO: why do we need static variables for the left and right velocity?
