@@ -12,7 +12,7 @@ public class LightInterfaceThread extends Thread {
     public void run() {
         //need to reinitialise the Finch each time else we have trouble connect
 //        sharedFinch = new Finch();
-        SearchForLight.END_RUN = false;
+        SearchForLight.RUNNING = true;
         SearchForLight.start(sharedFinch);
     }
     
@@ -22,40 +22,35 @@ public class LightInterfaceThread extends Thread {
         sharedFinch = finch;
     }
 
-    public static void startSearch() {
-        SearchForLight.END_RUN = false;
-        sharedFinch = new Finch();
-        SearchForLight.start(sharedFinch);
-    }
-
     public void stopProgram() {
-        SearchForLight.END_RUN = true;
+        SearchForLight.RUNNING = false;
 //        sharedFinch.quit();
     }
 
     public static boolean isRunning() {
-        return !SearchForLight.END_RUN;
+        return SearchForLight.RUNNING;
     }
 
     //TODO: will also need methods to get the live data out to the UI
 
-    public static long getTimeElapsedInNS() throws NullPointerException {
+    public static long getTimeElapsedInNS() throws NullPointerException, ArrayIndexOutOfBoundsException {
         return getMostRecentStats().getTimestamp() - SearchForLight.scriptStartTime;
     }
 
-    //throws NullPointerException just in case we request the stats before the run has started.
-    private static SpeedLightStats getMostRecentStats() throws NullPointerException {
-        int lastIndex = SearchForLight.stats.size() - 1;
-        return SearchForLight.stats.get(lastIndex);
+    //throws NullPointerException just in case we request the statList before the run has started.
+    //throws ArrayIndexOutOfBoundsException if we request first index from statList before any readings have been stored.
+    private static SpeedLightStats getMostRecentStats() throws NullPointerException, ArrayIndexOutOfBoundsException {
+        int lastIndex = SearchForLight.statList.size() - 1;
+        return SearchForLight.statList.get(lastIndex);
     }
 
     public static int getLeftLightAtStart() {
-        SpeedLightStats firstEntry = SearchForLight.stats.get(0);
+        SpeedLightStats firstEntry = SearchForLight.statList.get(0);
         return firstEntry.getLeftLightIntensity();
     }
 
     public static int getRightLightAtStart() {
-        SpeedLightStats firstEntry = SearchForLight.stats.get(0);
+        SpeedLightStats firstEntry = SearchForLight.statList.get(0);
         return firstEntry.getRightLightIntensity();
     }
 
@@ -101,16 +96,16 @@ public class LightInterfaceThread extends Thread {
         return SearchForLight.numbDetections;
     }
 
-    public static FinchState getCurrentFinchState() throws NullPointerException {
+    public static FinchState getCurrentFinchState() throws NullPointerException, ArrayIndexOutOfBoundsException {
         return getMostRecentStats().getCurrState();
     }
 
     public static TimeInStates getTimeInEachState() {
         TimeInStates collectedStats = new TimeInStates();
 
-        for (int i = 0; i<SearchForLight.stats.size()-1; i++) {
-            SpeedLightStats currStats = SearchForLight.stats.get(i);
-            SpeedLightStats nextStats = SearchForLight.stats.get(i+1);
+        for (int i = 0; i<SearchForLight.statList.size()-1; i++) {
+            SpeedLightStats currStats = SearchForLight.statList.get(i);
+            SpeedLightStats nextStats = SearchForLight.statList.get(i+1);
             addTimeInState(currStats, nextStats, collectedStats);
         }
         return collectedStats;
@@ -123,12 +118,12 @@ public class LightInterfaceThread extends Thread {
     }
 
     private static SpeedLightStats getFirstStat() {
-        return SearchForLight.stats.get(0);
+        return SearchForLight.statList.get(0);
     }
 
     //chosen to make individual methods here to ensure no extra calculations needed in the UI code.
     //Any conversion work to be done in this interface class.
-    public static RawAndPecentage getLatestLeftVelStats() throws NullPointerException {
+    public static RawAndPecentage getLatestLeftVelStats() throws NullPointerException, ArrayIndexOutOfBoundsException {
         SpeedLightStats stats = getMostRecentStats();
         int rawVal = stats.getLeftWheelVelocity();
         int max = SearchForLight.MAX_WHEEL_VEL;
@@ -137,7 +132,7 @@ public class LightInterfaceThread extends Thread {
         return new RawAndPecentage(rawVal, max, min);
     }
 
-    public static RawAndPecentage getLatestRightVelStats() throws NullPointerException {
+    public static RawAndPecentage getLatestRightVelStats() throws NullPointerException, ArrayIndexOutOfBoundsException {
         SpeedLightStats stats = getMostRecentStats();
         int rawVal = stats.getRightWheelVelocity();
         int max = SearchForLight.MAX_WHEEL_VEL;
@@ -146,7 +141,7 @@ public class LightInterfaceThread extends Thread {
         return new RawAndPecentage(rawVal, max, min);
     }
 
-    public static RawAndPecentage getLatestLeftLightStats() throws NullPointerException {
+    public static RawAndPecentage getLatestLeftLightStats() throws NullPointerException, ArrayIndexOutOfBoundsException {
         SpeedLightStats stats = getMostRecentStats();
         int rawVal = stats.getLeftLightIntensity();
         int max = SearchForLight.MAX_LIGHT_INTENSITY;
@@ -157,7 +152,7 @@ public class LightInterfaceThread extends Thread {
         //i.e. 1 method might times by 100, the other may not.
     }
 
-    public static RawAndPecentage getLatestRightLightStats() throws NullPointerException {
+    public static RawAndPecentage getLatestRightLightStats() throws NullPointerException, ArrayIndexOutOfBoundsException {
         SpeedLightStats stats = getMostRecentStats();
         int rawVal = stats.getRightLightIntensity();
         int max = SearchForLight.MAX_LIGHT_INTENSITY;
@@ -167,9 +162,9 @@ public class LightInterfaceThread extends Thread {
     }
 
     public static ArrayList<SpeedLightStats> getStats() {
-        //deep copy created to ensure stats integrity.
+        //deep copy created to ensure statList integrity.
         ArrayList<SpeedLightStats> copy = new ArrayList<>();
-        SearchForLight.stats.forEach(s -> {
+        SearchForLight.statList.forEach(s -> {
             copy.add(new SpeedLightStats(
                     s.getLeftLightIntensity(), s.getRightLightIntensity(),
                     s.getLeftWheelVelocity(), s.getRightWheelVelocity(),

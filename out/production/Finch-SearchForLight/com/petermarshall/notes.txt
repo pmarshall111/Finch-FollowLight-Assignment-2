@@ -22,3 +22,15 @@ Changes we need to make.
 the keepDistance around though in case we want to do something with it.
 - Potentially an opportunity to add an additional circuit on top of the finch with a switch, which could activate the thermometer? What would that do???
 - Change in light intensity needs to be brighter and proportional to how different it is to the minimum light intensity we're looking to catch
+
+
+When get home:
+
+- Try out all 4 different algorithms for keeping the distance constant and edit default vals to see if they become more effective.
+- Check that setting default value for when to detect light and when to keep dstance is working
+- Another way could be to store how we changed each of the wheel velocities in the SpeedLightStats. If we increased them but the light is still moving
+further away we need to massively, massively increase them. Basically if we accelerate but they're still moving away from us, massively up the speed.
+
+
+Flowchart todos:
+- Add Input/Output processes to setting the Finch wheel speeds.
