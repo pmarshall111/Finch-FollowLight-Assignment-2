@@ -1,25 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b5229f24-4ec6-411c-9c40-0fb6463f2150" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/finch.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Finch-SearchForLight.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Finch-SearchForLight.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/finch.log" beforeDir="false" afterPath="$PROJECT_DIR$/finch.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Finch-SearchForLight/com/petermarshall/FinchState.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Finch-SearchForLight/com/petermarshall/LightInterfaceThread.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Finch-SearchForLight/com/petermarshall/Main.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Finch-SearchForLight/com/petermarshall/RawAndPecentage.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Finch-SearchForLight/com/petermarshall/SearchForLight.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Finch-SearchForLight/com/petermarshall/SpeedLightStats.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Finch-SearchForLight/com/petermarshall/TimeInStates$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Finch-SearchForLight/com/petermarshall/TimeInStates.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Finch-SearchForLight/com/petermarshall/notes.txt" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Finch-SearchForLight/com/petermarshall/notes.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/petermarshall/LightInterfaceThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/petermarshall/LightInterfaceThread.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/petermarshall/SearchForLight.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/petermarshall/SearchForLight.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/petermarshall/notes.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/petermarshall/notes.txt" afterDir="false" />
-    </list>
+    <list default="true" id="b5229f24-4ec6-411c-9c40-0fb6463f2150" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -113,7 +95,7 @@
       <option name="presentableId" value="Default" />
       <updated>1575576926636</updated>
       <workItem from="1579618374894" duration="1731000" />
-      <workItem from="1580052561846" duration="6635000" />
+      <workItem from="1580052561846" duration="7370000" />
     </task>
     <servers />
   </component>

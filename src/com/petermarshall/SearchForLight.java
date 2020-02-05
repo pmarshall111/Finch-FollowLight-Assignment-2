@@ -99,20 +99,23 @@ public class SearchForLight {
         long lastAction = System.nanoTime();
 
         while (RUNNING) {
-            if (finchDetectsLight()) {
-                finchFollow();
-                lastAction = System.nanoTime();
-            } else if (fourSecondsElapsed(lastAction)) {
+            if (fourSecondsElapsed(lastAction)) {
                 finchSearch();
                 lastAction = System.nanoTime();
-            } else {
-                //if we've lost our light and it's not been 4 seconds yet, we want to shoot forward in desperation to find it?
-                //or do we lower the min light intensity?
+            } else if (finchDetectsLight()) {
+                finchFollow();
+                lastAction = System.nanoTime();
+            } else if (finchFollowingButLightLvlsTooLow()) {
+                finchFollow();
             }
 
             recordLightReadings();
             checkFinchBeakUp();
         }
+    }
+
+    private static boolean finchFollowingButLightLvlsTooLow() {
+        return finchState.equals(FinchState.FOLLOWING) && !finchDetectsLight();
     }
 
     private static void beginSearching() {
@@ -150,24 +153,37 @@ public class SearchForLight {
         if (!finchState.equals(FinchState.FOLLOWING)) {
             numbDetections++;
             finchState = FinchState.FOLLOWING;
-            finch.setLED(Color.RED); //TODO: need to set the brightness of the beak based on how bright the light is.
         }
-
-        int MAX_LEFT_INCREASE = MAX_WHEEL_VEL - currLeftVel;
-        int MAX_RIGHT_INCREASE = MAX_WHEEL_VEL - currRightVel;
+        setBeakIntensity();
 
         int maxDiffLeftAndRight = 90; //lowering increases steering sensitivity
         int accelMultiplier = 300; //increasing increases speed increase as light moves further away TODO: might need to set this based on what the light values are.
-        int diffBetweenLeftAndRight = finch.getLeftLightSensor() - finch.getRightLightSensor();
 
         // adjusting starting vel based on how far we are from light.
         int lightDiff = finchIntensityToMatch - getAvgLight();
         double diffAsRatio = (double)lightDiff/finchIntensityToMatch;
         int initialVel = BASE_WHEEL_VEL + (int)(accelMultiplier*diffAsRatio);
 
+        int MAX_LEFT_INCREASE = MAX_WHEEL_VEL - currLeftVel;
+        int MAX_RIGHT_INCREASE = MAX_WHEEL_VEL - currRightVel;
+        int diffBetweenLeftAndRight = finch.getLeftLightSensor() - finch.getRightLightSensor();
+
         currLeftVel = getWheelVelInRange(initialVel - ((MAX_LEFT_INCREASE)*diffBetweenLeftAndRight/maxDiffLeftAndRight));
         currRightVel = getWheelVelInRange(initialVel + ((MAX_RIGHT_INCREASE)*diffBetweenLeftAndRight/maxDiffLeftAndRight));
         finch.setWheelVelocities(currLeftVel, currRightVel);
+    }
+
+    private static void setBeakIntensity() {
+        int MIN_RED_COMPONENT = 30;
+        int MAX_RED_COMPONENT = 255;
+        int RED_COMPONENT_RANGE = MAX_RED_COMPONENT - MIN_RED_COMPONENT;
+
+        int lightForMaxBrightness = 200;
+        int potentialLightRange = lightForMaxBrightness - MIN_LIGHT_DETECT;
+        double distIntoRange = Math.max(0d, (double)(getAvgLight() - MIN_LIGHT_DETECT) / potentialLightRange); //do not want to set LED below min component. therefore min distance into range = 0
+        int redComponent = (int)(distIntoRange * RED_COMPONENT_RANGE + MIN_RED_COMPONENT);
+        finch.setLED(redComponent, 0, 0);
+//        System.out.println("Light: " + getAvgLight() + " | red: " + redComponent);
     }
 
 
@@ -217,7 +233,7 @@ public class SearchForLight {
         //NOTE: cannot use built in method to hold wheel velocities for a certain amount of time as this blocks the thread
         //execution. Can't do this as we want to record values at all times.
         long startTime = System.nanoTime();
-        while (!xSecondsPassed(startTime, 3)) {
+        while (!xSecondsPassed(startTime, 2)) {
             finch.setWheelVelocities(currLeftVel, currRightVel);
             recordLightReadings();
         }
