@@ -1,7 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b5229f24-4ec6-411c-9c40-0fb6463f2150" name="Default Changelist" comment="" />
+    <list default="true" id="b5229f24-4ec6-411c-9c40-0fb6463f2150" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/com/petermarshall/main/TimeHelper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Finch-SearchForLight.iml" beforeDir="false" afterPath="$PROJECT_DIR$/Finch-SearchForLight.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/Finch-SearchForLight/com/petermarshall/notes.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/petermarshall/FinchState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/petermarshall/main/FinchState.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/petermarshall/LightInterfaceThread.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/petermarshall/main/LightInterfaceThread.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/petermarshall/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/petermarshall/main/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/petermarshall/RawAndPecentage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/petermarshall/main/RawAndPecentage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/petermarshall/SearchForLight.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/petermarshall/main/SearchForLight.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/petermarshall/SpeedLightStats.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/petermarshall/main/SpeedLightStats.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/petermarshall/TimeInStates.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/petermarshall/main/TimeInStates.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/petermarshall/notes.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/petermarshall/main/notes.txt" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -11,6 +24,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Enum" />
+        <option value="Arquillian JUnit Test Class" />
+        <option value="JUnit4 Test Class" />
         <option value="Class" />
       </list>
     </option>
@@ -49,13 +64,31 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1579617047390" />
+    <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary" value="JUnit4" />
+    <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.Arquillian JUnit4" value="" />
+    <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit4" value="" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../Finch UI" />
-    <property name="project.structure.last.edited" value="Libraries" />
+    <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="settings.editor.selected.configurable" value="preferences.general" />
   </component>
-  <component name="RunManager">
+  <component name="RecentsManager">
+    <key name="CreateTestDialog.RecentsKey">
+      <recent name="com.petermarshall.main" />
+    </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="" />
+      <recent name="com.petermarshall.main" />
+    </key>
+    <key name="CreateTestDialog.Recents.Supers">
+      <recent name="" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Peter\eclipse-workspace\Finch-SearchForLight\src\com\petermarshall\main" />
+    </key>
+  </component>
+  <component name="RunManager" selected="JUnit.TimeInStatesTest">
     <configuration name="Main" type="Application" factoryName="Application" temporary="true">
       <option name="MAIN_CLASS_NAME" value="com.petermarshall.Main" />
       <module name="Finch-SearchForLight" />
@@ -66,8 +99,50 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="RawAndPercentageTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Finch-SearchForLight" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value=".*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="RawAndPercentageTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="SpeedLightStatsTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Finch-SearchForLight" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value=".*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="SpeedLightStatsTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="TimeInStatesTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="Finch-SearchForLight" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="MAIN_CLASS_NAME" value="TimeInStatesTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.TimeInStatesTest" />
+        <item itemvalue="JUnit.SpeedLightStatsTest" />
+        <item itemvalue="JUnit.RawAndPercentageTest" />
         <item itemvalue="Application.Main" />
       </list>
     </recent_temporary>
@@ -96,6 +171,7 @@
       <updated>1575576926636</updated>
       <workItem from="1579618374894" duration="1731000" />
       <workItem from="1580052561846" duration="7370000" />
+      <workItem from="1580927791774" duration="11903000" />
     </task>
     <servers />
   </component>
@@ -103,6 +179,10 @@
     <option name="version" value="1" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="2685" y="230" key="#com.intellij.ide.util.MemberChooser" timestamp="1580989447147">
+      <screen x="1920" y="0" width="1920" height="1040" />
+    </state>
+    <state x="2685" y="230" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1580989447147" />
     <state x="534" y="254" key="#com.intellij.ide.util.projectWizard.JdkChooserPanel.MyDialog" timestamp="1579618934633">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
@@ -111,22 +191,57 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="263" y="20" key="#com.intellij.openapi.projectRoots.ui.ProjectJdksEditor/0.0.1366.728@0.0.1366.728" timestamp="1579618929830" />
-    <state x="579" y="151" key="FileChooserDialogImpl" timestamp="1580052861424">
-      <screen x="0" y="0" width="1920" height="1040" />
+    <state x="2681" y="390" width="398" height="266" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes" timestamp="1580984267731">
+      <screen x="1920" y="0" width="1920" height="1040" />
+    </state>
+    <state x="2681" y="390" width="398" height="266" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1580984267731" />
+    <state x="2883" y="300" key="FileChooserDialogImpl" timestamp="1580983694865">
+      <screen x="1920" y="0" width="1920" height="1040" />
     </state>
     <state x="412" y="106" key="FileChooserDialogImpl/0.0.1366.728@0.0.1366.728" timestamp="1579619554034" />
+    <state x="2883" y="300" key="FileChooserDialogImpl/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1580983694865" />
     <state x="579" y="151" key="FileChooserDialogImpl/1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1580052861424" />
-    <state x="186" y="0" key="SettingsEditor" timestamp="1579619055934">
-      <screen x="0" y="0" width="1366" height="728" />
+    <state width="1877" height="330" key="GridCell.Tab.0.bottom" timestamp="1581494455337">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="330" key="GridCell.Tab.0.bottom/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1581494455337" />
+    <state width="1877" height="330" key="GridCell.Tab.0.bottom/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1580985046874" />
+    <state width="1877" height="330" key="GridCell.Tab.0.center" timestamp="1581494455336">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="330" key="GridCell.Tab.0.center/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1581494455336" />
+    <state width="1877" height="330" key="GridCell.Tab.0.center/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1580985046873" />
+    <state width="1877" height="330" key="GridCell.Tab.0.left" timestamp="1581494455336">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="330" key="GridCell.Tab.0.left/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1581494455336" />
+    <state width="1877" height="330" key="GridCell.Tab.0.left/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1580985046872" />
+    <state width="1877" height="330" key="GridCell.Tab.0.right" timestamp="1581494455336">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1877" height="330" key="GridCell.Tab.0.right/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1581494455336" />
+    <state width="1877" height="330" key="GridCell.Tab.0.right/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1580985046874" />
+    <state x="2181" y="0" key="SettingsEditor" timestamp="1580983708711">
+      <screen x="1920" y="0" width="1920" height="1040" />
     </state>
     <state x="186" y="0" key="SettingsEditor/0.0.1366.728@0.0.1366.728" timestamp="1579619055934" />
+    <state x="2181" y="0" key="SettingsEditor/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1580983708711" />
     <state x="391" y="193" key="com.intellij.ide.util.TipDialog" timestamp="1579618378520">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="391" y="193" key="com.intellij.ide.util.TipDialog/0.0.1366.728@0.0.1366.728" timestamp="1579618378520" />
-    <state x="410" y="258" key="com.intellij.jarRepository.RepositoryAttachDialog-DOWNLOAD" timestamp="1579619000423">
-      <screen x="0" y="0" width="1366" height="728" />
+    <state x="2496" y="369" key="com.intellij.jarRepository.RepositoryAttachDialog-DOWNLOAD" timestamp="1580928163620">
+      <screen x="1920" y="0" width="1920" height="1040" />
     </state>
     <state x="410" y="258" key="com.intellij.jarRepository.RepositoryAttachDialog-DOWNLOAD/0.0.1366.728@0.0.1366.728" timestamp="1579619000423" />
+    <state x="2496" y="369" key="com.intellij.jarRepository.RepositoryAttachDialog-DOWNLOAD/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1580928163620" />
+    <state x="2651" y="241" key="com.intellij.testIntegration.createTest.CreateTestDialog" timestamp="1580985212646">
+      <screen x="1920" y="0" width="1920" height="1040" />
+    </state>
+    <state x="2651" y="241" key="com.intellij.testIntegration.createTest.CreateTestDialog/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1580985212646" />
+    <state x="2543" y="225" width="672" height="678" key="search.everywhere.popup" timestamp="1580929619928">
+      <screen x="1920" y="0" width="1920" height="1040" />
+    </state>
+    <state x="2543" y="225" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1580929619928" />
   </component>
 </project>

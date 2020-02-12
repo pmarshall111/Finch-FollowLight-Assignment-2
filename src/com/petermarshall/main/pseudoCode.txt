@@ -1,0 +1,315 @@
+//Proper pseudocode starts from here
+
+
+Algorithm 1: GUI() {
+    Input: No input.
+
+    1) Initialise Finch
+    2) Set GUI window icon to be image of Finch
+    3) Set GUI window title to be "Finch UI"
+    4) pageMainMenu(Finch)
+
+    Output: Output is shown as updates to the User Interface.
+}
+
+
+Algorithm 2: pageMainMenu(Finch) {
+    Input: Finch is an object that allows us to access the Finch robot.
+
+    1) Load main menu page
+    2) while (user does not click on Search For Light Task)
+    3)     if (user clicks on X button to close window)
+    4)         Close the window
+    5)     end if
+    6) end while
+    7) Load Search For Light Page
+    8) pageSearchForLight(Finch)
+
+    Output: Output is shown as updates to the User Interface.
+}
+
+
+Algorithm 3: pageSearchForLight(Finch) {
+    Input: Finch is an object that allows us to access the Finch robot.
+
+    1)  Show Start button
+    2)  Make Stop button hidden
+    3)  while (user does not click on Start Button)
+    4)     if (user clicks Go Back to Main Menu)
+    5)         pageMainMenu(Finch)
+    6)         return
+    7)     end if
+    8)     if (user closes window)
+    9)         return
+    10)    end if
+    11) end while
+    12) Make Start button hidden
+    13) Show Stop button
+    14) Show a pre-ticked checkbox with a label "Show Final Telemetry"
+    15) Show boxes with labels "Current Run Time", "Finch State", "Wheel Velocity" and "Light Intensity"
+    16) Set LeftWheelVelocity = 0
+    17) Set RightWheelVelocity = 0
+    18) Set StartTime = system timestamp
+    19) Set FinchState = null
+    20) Set MinLightForDetection = 0
+    21) Set TargetLightIntensity = 0
+    22) Set NumbLightDetections = 0
+    23) Set ListOfStats = new List
+    24) waitForFinchToBeLevel(Finch, FinchState, ListOfStats)
+    25) setDetectionLevels(Finch, MinLightForDetection, TargetLightIntensity)
+    26) initialiseSearch(Finch, FinchState, LeftWheelVelocity, RightWheelVelocity, ListOfStats)
+    27) Set TimeLastDetectedOrSearched = system timestamp
+    28) while (user does not click on Stop button AND NOT Finch.isBeakUp())
+    29)     decideAction(Finch, FinchState, LeftWheelVelocity, RightWheelVelocity, NumbLightDetections, MinLightForDetection, TargetLightIntensity, TimeLastDetectedOrSearched)
+    30)     Update box with label "Current Run Time" to  (system timestamp - StartTime)
+    31)     Update box with label "Finch State" to FinchState
+    32)     Update box with label "Wheel Velocity" to LeftWheelVelocity, RightWheelVelocity
+    33)     Update box with label "Light Intensity" to Finch.getLeftLightSensor(), Finch.getRightLightSensor()
+    34)     Add entry to ListOfStats with data: system timestamp, Finch.getLeftLightSensor(), Finch.getRightLightSensor(), FinchState
+    35)     if (user clicks checkbox with label "Show Final Telemetry")
+    36)         Invert checkbox value
+    37)     end if
+    38)     if (user clicks Go Back to Main Menu)
+    39)         if (checkbox with label "Show Final Telemetry" is ticked)
+    40)             newPageFinalTelemetry(Finch, NumbLightDetections, StartTime, ListOfStats)
+    41)         end if
+    42)         pageMainMenu(Finch)
+    43)         return
+    44)     end if
+    45)     if (user closes window)
+    46)         return
+    47)     end if
+    48) end while
+    49) if (checkbox with label "Show Final Telemetry" is ticked)
+    50)     newPageFinalTelemetry(Finch, NumbLightDetections, StartTime, ListOfStats)
+    51) end if
+    52) pageSearchForLight(Finch)
+
+    Output: Output is shown as physical actions by the Finch and updates to the User Interface.
+}
+
+Algorithm 4: newPageFinalTelemetry(Finch, NumbLightDetections, StartTime, ListOfStats) {
+    Input: Finch is an object that allows us to access the Finch robot, NumbLightDetections is an Integer, StartTime is a numeric value, ListOfStats is a list of stats from the Finch at different points in time.
+
+    1)  Create new popup window
+    2)  Show box with label: "Times New Light Detected" with value: NumbLightDetections
+    3)  Show box with label: "Total Run Time" with value: (system timestamp - StartTime)
+    4)  Set TimeWaitingToBeLevel = 0
+    5)  Set TimeSearching = 0
+    6)  Set TimeFollowing = 0
+    7)  Set I = 1
+    8)  Set HighestLeftVal = 0
+    9)  Set HighestRightVal = 0
+    10) Set LowestLeftVal = 255
+    11) Set LowestRightVal = 255
+    12) Set TotalLeftLight = 0
+    13) Set TotalRightLight = 0
+    14) Set TotalAvgLight = 0
+    15) while (I < numb elements in ListOfStats)
+    16)     Set CurrentStat = I'th element in ListOfStats
+    17)     Set PrevStat = (I-1)'th element in ListOfStats
+    18)     Set TimeInState = CurrentStat.timestamp - PrevStat.timestamp
+    19)     if (PrevStat.FinchState == Waiting to be level)
+    20)         Set TimeWaitingToBeLevel = TimeWaitingToBeLevel + TimeInState
+    21)     end if
+    22)     if (PrevStat.FinchState == Searching)
+    23)         Set TimeSearching = TimeSearching + TimeInState
+    24)     end if
+    25)     if (PrevStat.FinchState == Following)
+    26)         Set TimeFollowing = TimeFollowing + TimeInState
+    27)     end if
+    28)     if (PrevStat.leftLight > HighestLeftVal)
+    29)         Set HighestLeftVal = CurrentStat.leftLight
+    30)     end if
+    31)     if (PrevStat.rightLight > HighestRightVal)
+    32)         Set HighestRightVal = CurrentStat.rightLight
+    33)     end if
+    34)     if (PrevStat.leftLight < LowestLeftVal)
+    35)         Set LowestLeftVal = CurrentStat.leftLight
+    36)     end if
+    37)     if (PrevStat.rightLight < LowestRightVal)
+    38)         Set LowestRightVal = CurrentStat.rightLight
+    39)     end if
+    40)     Set TotalLeftLight = TotalLeftLight + CurrentStat.leftLight
+    41)     Set TotalRightLight = TotalRightLight + CurrentStat.rightLight
+    42)     Set TotalAvgLight = TotalAvgLight + (CurrentStat.leftLight + CurrentStat.rightLight) / 2
+    43)     Set I = I + 1
+    44) end while
+    45) Show pie chart of time spent in each state using values TimeWaitingToBeLevel, TimeSearching, TimeFollowing
+    46) Show box with label: "Starting Readings", with values: ListOfStats[0].leftLight, ListOfStats[0].rightLight
+    47) Show box with label: "Highest Sensor Readings", with values: HighestLeftVal, HighestRightVal
+    48) Show box with label: "Lowest Sensor Readings", with values: LowestLeftVal, LowestRightVal
+    49) Show box with label: "Average Sensor Readings", with values: TotalLeftLight/I, TotalRightLight/I, TotalAvgLight/I
+    50) Show line chart of light intensity over time using values from ListOfStats
+
+    Output: Output is shown as a new window on screen.
+}
+
+Algorithm 5: waitForFinchToBeLevel(Finch, FinchState, ListOfStats) {
+    Input: Finch is an object that allows us to access the Finch robot, FinchState is a String, ListOfStats is a list of stats from the Finch at different points in time.
+
+    1) Finch.setLED(Blue)
+    2) Set FinchState = Waiting to be level
+    3) Set TimeLastMoved = system timestamp
+    4) while (time since TimeLastMoved < 3seconds)
+    5)    if (NOT finch.isFinchLevel())
+    6)        Set TimeLastMoved = system timestamp
+    7)    end if
+    8)    Add entry to ListOfStats with data: system timestamp, Finch.getLeftLightSensor(), Finch.getRightLightSensor(), FinchState
+    9) end while
+
+    Output: Output is shown as physical actions from Finch robot.
+}
+
+Algorithm 6: setDetectionLevels(Finch, MinLightForDetection, TargetLightIntensity) {
+    Input: Finch is an object that allows us to access the Finch robot, MinLightForDetection is an integer, TargetLightIntensity is an integer.
+
+    1) Set MinLightForDetection = (Finch.getLeftLightSensor() + Finch.getRightLightSensor())/2 + 30
+    2) if (MinLightForDetection > 200)
+    3)     MinLightForDetection = 200
+    4) end if
+    5) Set TargetLightIntensity = MinLightForDetection * 1.2
+    6) if (TargetLightIntensity < 150)
+    7)     TargetLightIntensity = 150
+    8) end if
+
+    Output: MinLightForDetection and TargetLightIntensity are set to values proportional to ambient light levels.
+}
+
+Algorithm 7: initialiseSearch(Finch, FinchState, LeftWheelVelocity, RightWheelVelocity, ListOfStats) {
+    Input: Finch is a class that allows us to access the Finch robot, FinchState is a String, LeftWheelVelocity is an integer between 255 and -255,
+    RightWheelVelocity is an integer between 255 and -255, ListOfStats is a list of stats from the Finch at different points in time.
+
+    1) Set FinchState = Searching
+    2) Finch.setLED(Yellow)
+    3) Set LeftWheelVelocity = 100
+    4) Set RightWheelVelocity = 100
+    5) Finch.setWheelVelocities(LeftWheelVelocity, RightWheelVelocity)
+    6) Add entry to ListOfStats with data: system timestamp, Finch.getLeftLightSensor(), Finch.getRightLightSensor(), FinchState
+
+    Output: Output is shown as physical actions from Finch robot.
+}
+
+Algorithm 8: decideAction(Finch, FinchState, LeftWheelVelocity, RightWheelVelocity, NumbLightDetections, MinLightForDetection, TargetLightIntensity, TimeLastDetectedOrSearched) {
+    Input: Finch is an object that allows us to access the Finch robot, FinchState is a String, LeftWheelVelocity is an integer between 255 and -255,
+    RightWheelVelocity is an integer between 255 and -255, NumbLightDetections is an integer, MinLightForDetection is an integer between 0 and 255, TargetLightIntensity is an integer between 0 and 255, TimeLastDetectedOrSearched is a numeric value.
+
+    1)  if (system timestamp - TimeLastDetectedOrSearched > 4seconds)
+    2)     finchSearchesForLight(Finch, FinchState, LeftWheelVelocity, RightWheelVelocity)
+    3)     Set TimeLastDetectedOrSearched = system timestamp
+    4)  end if
+    5)  Set AvgLight = (Finch.getLeftLightSensor() + Finch.getRightLightSensor()) / 2
+    6)  if (AvgLight > MinLightForDetection)
+    7)      finchFollowsTheLight(Finch, FinchState, LeftWheelVelocity, RightWheelVelocity, NumbLightDetections, MinLightForDetection, TargetLightIntensity)
+    8)      Set TimeLastDetectedOrSearched = system timestamp
+    9)  end if
+    10) if (FinchState = Following)
+    11)     finchFollowsTheLight(Finch, FinchState, LeftWheelVelocity, RightWheelVelocity, NumbLightDetections, MinLightForDetection, TargetLightIntensity)
+    12) end if
+
+    Output: Output is shown as physical actions from Finch robot.
+}
+
+Algorithm 9: finchSearchesForLight(Finch, FinchState, LeftWheelVelocity, RightWheelVelocity) {
+    Input: Finch is an object that allows us to access the Finch robot, FinchState is a String, LeftWheelVelocity is an integer between 255 and -255,
+    RightWheelVelocity is an integer between 255 and -255.
+
+    1)  Set FinchState = Searching
+    2)  Finch.setLED(Yellow)
+    3)  Set LeftWheelVelocity = 0
+    4)  Set RightWheelVelocity = 0
+    5)  Finch.setWheelVelocities(LeftWheelVelocity, RightWheelVelocity)
+    6)  pauseProgram(0.5)
+    7)  Set random = randomly chooses a number between 0 and 1
+    8)  if (random > 0.5)
+    9)      Set LeftWheelVelocity = -100
+    10)     Set RightWheelVelocity = 100
+    11) else
+    12)     Set LeftWheelVelocity = 100
+    13)     Set RightWheelVelocity = -100
+    14) end if
+    15) Finch.setWheelVelocities(LeftWheelVelocity, RightWheelVelocity)
+    16) pauseProgram(2)
+    17) Set LeftWheelVelocity = 100
+    18) Set RightWheelVelocity = 100
+    19) Finch.setWheelVelocities(LeftWheelVelocity, RightWheelVelocity)
+
+    Output: Output is shown as physical actions from Finch robot.
+}
+
+Algorithm 10: pauseProgram(xSeconds) {
+    Input: xSeconds is a positive integer.
+
+    1) Set StartTime = system timestamp
+    2) while (time since StartTime < xSeconds)
+    3) end while
+
+    Output: No output.
+}
+
+Algorithm 11: finchFollowsTheLight(Finch, FinchState, LeftWheelVelocity, RightWheelVelocity, NumbLightDetections, MinLightForDetection, TargetLightIntensity) {
+    Input: Finch is an object that allows us to access the Finch robot, FinchState is a String, LeftWheelVelocity is an integer between 255 and -255,
+    RightWheelVelocity is an integer between 255 and -255, NumbLightDetections is an integer, MinLightForDetection is an integer between 0 and 255, TargetLightIntensity is an integer between 0 and 255.
+
+    1)  if (FinchState != Following)
+    2)      NumbLightDetections = NumbLightDetections + 1
+    3)      FinchState = Following
+    4)  end if
+    5)  setFinchBeakIntensity(Finch, MinLightForDetection)
+    6)  Set AccelMultiplier = 300
+    7)  Set AvgLight = (Finch.getLeftLightSensor() + Finch.getRightLightSensor()) / 2
+    8)  Set DiffFromTargetRatio = (TargetLightIntensity - AvgLight) / TargetLightIntensity
+    9)  Set BaseVelocity = 100 + AccelMultiplier * DiffFromTargetRatio
+    10) Set MaxDiffLeftToRight = 90
+    11) Set DiffLeftToRight = Finch.getLeftLightSensor() - Finch.getRightLightSensor()
+    12) Set LeftMaxIncrease = 255 - LeftWheelVelocity
+    13) Set RightMaxIncrease = 255 - RightWheelVelocity
+    14) Set LeftWheelVelocity = getWheelVelInRange(BaseVelocity - LeftMaxIncrease * DiffLeftToRight/MaxDiffLeftToRight)
+    15) Set RightWheelVelocity = getWheelVelInRange(BaseVelocity + RightMaxIncrease * DiffLeftToRight/MaxDiffLeftToRight)
+    16) Finch.setWheelVelocities(LeftWheelVelocity, RightWheelVelocity)
+
+    Output: Output is shown as physical actions from Finch robot.
+}
+
+Algorithm 12: setBeakIntensity(Finch, MinLightForDetection) {
+    Input: Finch is an object that allows us to access the Finch robot, MinLightForDetection is an integer between 0 and 255.
+
+    1) Set MinRedOutput = 30
+    2) Set MaxRedOutput = 255
+    3) Set RedComponentRange = MaxRedOutput - MinRedOutput
+    4) Set LightToGiveMaxBrightness = 200
+    5) Set LightRange = LightToGiveMaxBrightness - MinLightForDetection
+    6) Set AvgLight = (Finch.getLeftLightSensor() + Finch.getRightLightSensor()) / 2
+    7) Set RatioIntoLightRange = (AvgLight - MinLightForDetection) / LightRange
+    8) Set RedVal = RatioIntoLightRange * RedComponentRange + MinRedOutput
+    9) Finch.setLED(RedVal,0,0)
+
+    Output: Output is shown as physical LED change from Finch robot.
+}
+
+Algorithm 13: getWheelVelInRange(AttemptedVal) {
+    Input: AttemptedVal is an integer
+
+    1) if (AttemptedVal > 255)
+    2)     Set AttemptedVal = 255
+    3) end if
+    4) if (AttemptedVal <-255)
+    5)     Set AttemptedVal = -255
+    6) end if
+
+    Output: AttemptedVal has been updated to a new value within the maximum wheel velocities the Finch allows.
+}
+
+TODO: edit pseudocode to reflect the flow charts
+
+
+
+
+
+
+
+
+
+
+
+

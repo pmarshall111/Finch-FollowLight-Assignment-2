@@ -1,20 +1,21 @@
-package com.petermarshall;
+package com.petermarshall.main;
 
+//class takes in long values and adds them to the correct variable based on the state.
 public class TimeInStates {
     private long followingTime;
     private long searchingTime;
     private long waitingTime;
 
-    public void addTime(long t, FinchState state) {
+    public void addTime(long duration, FinchState state) {
         switch(state) {
             case FOLLOWING:
-                followingTime += t;
+                followingTime += duration;
                 break;
             case SEARCH:
-                searchingTime += t;
+                searchingTime += duration;
                 break;
             case WAITING_TO_BE_LEVEL:
-                waitingTime += t;
+                waitingTime += duration;
 
         }
     }

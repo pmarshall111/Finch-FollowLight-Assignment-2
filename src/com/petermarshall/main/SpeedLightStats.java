@@ -1,4 +1,4 @@
-package com.petermarshall;
+package com.petermarshall.main;
 
 public class SpeedLightStats {
     private final long timestamp;
@@ -7,7 +7,6 @@ public class SpeedLightStats {
     private final FinchState currState;
 
     public SpeedLightStats(int leftLight, int rightLight, int leftVel, int rightVel, FinchState state, long timestamp) {
-        //TODO: can add max vals to velocities. so we can just add 510 to our distance if we go from -255 to 255.
         this.timestamp = timestamp;
         this.lightIntensity = new int[]{leftLight, rightLight};
         this.wheelVelocity = new int[]{leftVel, rightVel};

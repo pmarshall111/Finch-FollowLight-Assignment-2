@@ -1,4 +1,4 @@
-package com.petermarshall;
+package com.petermarshall.main;
 
 public enum FinchState {
     FOLLOWING,

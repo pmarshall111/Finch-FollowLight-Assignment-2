@@ -1,14 +1,12 @@
-package com.petermarshall;
+package com.petermarshall.main;
 
 import edu.cmu.ri.createlab.terk.robot.finch.Finch;
 
 public class Main {
 
     public static void main(String[] args) {
-	// write your code here
         Finch sharedfinch = new Finch();
-        SearchForLight.start(sharedfinch);
-
-//        sharedfinch.setWheelVelocities(255,-255);
+        SearchForLight sFL = new SearchForLight(sharedfinch);
+        sFL.start();
     }
 }

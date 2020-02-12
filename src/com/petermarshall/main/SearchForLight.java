@@ -1,41 +1,44 @@
-package com.petermarshall;
+package com.petermarshall.main;
 
-//import com.github.freva.asciitable.AsciiTable;
 import edu.cmu.ri.createlab.terk.robot.finch.Finch;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.IntSummaryStatistics;
 
+import static com.petermarshall.main.FinchLimits.MAX_WHEEL_VEL;
+import static com.petermarshall.main.FinchLimits.MIN_WHEEL_VEL;
+import static com.petermarshall.main.TimeHelper.*;
+
+//could potentially make this instantiable with getter methods. would allow for possible additional feature of
 public class SearchForLight {
 
-    private static Finch finch;
-    private static FinchState finchState;
+    private Finch finch;
+    private FinchState finchState;
 
-    static long scriptStartTime;
-    static int numbDetections;
+    private long scriptStartTime;
+    private int numbDetections;
 
-    private static int finchIntensityToMatch;
-    private static int MIN_LIGHT_DETECT;
+    private int finchIntensityToMatch;
+    private int MIN_LIGHT_DETECT;
 
-    static final int MIN_LIGHT_INTENSITY = 0;
-    static final int MAX_LIGHT_INTENSITY = 255;
-    static final int MAX_WHEEL_VEL = 255;
-    static final int MIN_WHEEL_VEL = -255;
-    private static final int BASE_WHEEL_VEL = 100;
+    private final int BASE_WHEEL_VEL = 100;
 
-    private static int currLeftVel;
-    private static int currRightVel;
+    private int currLeftVel;
+    private int currRightVel;
 
-    static ArrayList<SpeedLightStats> statList;
-    static IntSummaryStatistics leftLightSummary;
-    static IntSummaryStatistics rightLightSummary;
+    private ArrayList<SpeedLightStats> statList;
+    private IntSummaryStatistics leftLightSummary;
+    private IntSummaryStatistics rightLightSummary;
 
-    static boolean RUNNING = true;
+    boolean RUNNING = true;
 
-    public static void start(Finch sharedFinch) {
+    public SearchForLight(Finch sharedFinch) {
         finch = sharedFinch;
+    }
 
+    public void start() {
+        RUNNING = true;
         init();
         waitForFinchToBeLevel();
         setDetectionLevels();
@@ -44,7 +47,15 @@ public class SearchForLight {
         stopFinch();
     }
 
-    private static void waitForFinchToBeLevel() {
+    public void stop() {
+        RUNNING = false;
+    }
+
+    public boolean isRunning() {
+        return RUNNING;
+    }
+
+    private void waitForFinchToBeLevel() {
         finchState = FinchState.WAITING_TO_BE_LEVEL;
         finch.setLED(Color.BLUE);
 
@@ -58,21 +69,21 @@ public class SearchForLight {
         }
     }
 
-    private static boolean notStillForXSeconds(long prevTime, int xSeconds) {
+    private boolean notStillForXSeconds(long prevTime, int xSeconds) {
         return !xSecondsPassed(prevTime, xSeconds);
     }
 
-    private static boolean finchIsntLevel() {
+    private boolean finchIsntLevel() {
         return !finch.isFinchLevel();
     }
 
-    private static void checkFinchBeakUp() {
+    private void checkFinchBeakUp() {
         if (finch.isBeakUp()) {
             RUNNING = false;
         }
     }
 
-    private static void init(){
+    private void init(){
         scriptStartTime = System.nanoTime(); //function allows for time period of 292years. So no worrying about overflows.
         numbDetections = 0;
 
@@ -84,7 +95,7 @@ public class SearchForLight {
         rightLightSummary = new IntSummaryStatistics();
     }
 
-    private static void setDetectionLevels() {
+    private void setDetectionLevels() {
         //will set it based on current light levels.
         //going to start with just 20% more, and intensity to match should be 20% more than that.
         int avgLight = getAvgLight();
@@ -95,7 +106,7 @@ public class SearchForLight {
         System.out.println("MIN light: " + MIN_LIGHT_DETECT + "\nIntens to match: " + finchIntensityToMatch);
     }
 
-    private static void detectLight() {
+    private void detectLight() {
         long lastAction = System.nanoTime();
 
         while (RUNNING) {
@@ -114,30 +125,30 @@ public class SearchForLight {
         }
     }
 
-    private static boolean finchFollowingButLightLvlsTooLow() {
+    private boolean finchFollowingButLightLvlsTooLow() {
         return finchState.equals(FinchState.FOLLOWING) && !finchDetectsLight();
     }
 
-    private static void beginSearching() {
+    private void beginSearching() {
         finchState = FinchState.SEARCH;
         finch.setLED(Color.YELLOW);
         moveForwardLowSpeed();
     }
 
-    private static void stopFinch() {
+    private void stopFinch() {
         finch.setWheelVelocities(0,0);
         finch.setLED(Color.black, 0);
     }
 
-    private static boolean lightAboveMinThreshold(SpeedLightStats stats) {
+    private boolean lightAboveMinThreshold(SpeedLightStats stats) {
         return Math.max(stats.getLeftLightIntensity(), stats.getRightLightIntensity()) >= MIN_LIGHT_DETECT;
     }
 
-    private static boolean finchDetectsLight() {
+    private boolean finchDetectsLight() {
         return (finch.isLeftLightSensor(MIN_LIGHT_DETECT) || finch.isRightLightSensor(MIN_LIGHT_DETECT));
     }
 
-    private static void recordLightReadings() {
+    private void recordLightReadings() {
         int left = finch.getLeftLightSensor();
         int right = finch.getRightLightSensor();
 
@@ -149,7 +160,7 @@ public class SearchForLight {
 
     // following light is based on the light difference between the left and right sensor as well as the overall light difference to how close we want to be to the light.
     // i.e. doesn't let us shoot past the light
-    private static void finchFollow() {
+    private void finchFollow() {
         if (!finchState.equals(FinchState.FOLLOWING)) {
             numbDetections++;
             finchState = FinchState.FOLLOWING;
@@ -173,7 +184,7 @@ public class SearchForLight {
         finch.setWheelVelocities(currLeftVel, currRightVel);
     }
 
-    private static void setBeakIntensity() {
+    private void setBeakIntensity() {
         int MIN_RED_COMPONENT = 30;
         int MAX_RED_COMPONENT = 255;
         int RED_COMPONENT_RANGE = MAX_RED_COMPONENT - MIN_RED_COMPONENT;
@@ -187,7 +198,7 @@ public class SearchForLight {
     }
 
 
-    private static int getWheelVelInRange(int reqVel) {
+    private int getWheelVelInRange(int reqVel) {
         if (reqVel > MAX_WHEEL_VEL) {
             return MAX_WHEEL_VEL;
         } else if (reqVel < MIN_WHEEL_VEL) {
@@ -197,7 +208,7 @@ public class SearchForLight {
         }
     }
 
-    private static int atLeast20PercAboveMinLight(int lightReading) {
+    private int atLeast20PercAboveMinLight(int lightReading) {
         int newMinLight = (int) (MIN_LIGHT_DETECT * 1.2);
 
         if (lightReading < newMinLight) {
@@ -207,15 +218,15 @@ public class SearchForLight {
         }
     }
 
-    private static int getAvgLight() {
+    private int getAvgLight() {
         return (finch.getLeftLightSensor() + finch.getRightLightSensor())/2;
     }
 
-    private static int getMaxLight() {
+    private int getMaxLight() {
         return Math.max(finch.getLeftLightSensor(), finch.getRightLightSensor());
     }
 
-    private static void finchSearch() {
+    private void finchSearch() {
         finchState = FinchState.SEARCH;
         finch.setLED(Color.YELLOW);
         finch.setWheelVelocities(0,0);
@@ -225,7 +236,7 @@ public class SearchForLight {
         moveForwardLowSpeed();
     }
 
-    private static void turnFinch90Deg() {
+    private void turnFinch90Deg() {
         int multiplier = (int) Math.round(Math.random());
         currLeftVel = multiplier * BASE_WHEEL_VEL;
         currRightVel = Math.abs(multiplier-1) * BASE_WHEEL_VEL;
@@ -241,27 +252,37 @@ public class SearchForLight {
 
 
 
-    private static void moveForwardLowSpeed() {
+    private void moveForwardLowSpeed() {
         currLeftVel = BASE_WHEEL_VEL;
         currRightVel = BASE_WHEEL_VEL;
         finch.setWheelVelocities(currLeftVel,currRightVel);
     }
 
-    private static boolean fourSecondsElapsed(long prevTime) {
-        return xSecondsPassed(prevTime, 4);
-    }
-
-    private static boolean xSecondsPassed(long prevTime, double xSeconds) {
-        long currTime = System.nanoTime();
-        long nanoSecs = (long) (xSeconds*Math.pow(10,9));
-        return currTime - prevTime > nanoSecs;
-    }
-
-    private static void sleep(int millis) {
+    private void sleep(int millis) {
         try {
             Thread.sleep(millis);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    public long getScriptStartTime() {
+        return scriptStartTime;
+    }
+
+    public int getNumbDetections() {
+        return numbDetections;
+    }
+
+    public ArrayList<SpeedLightStats> getStatList() {
+        return statList;
+    }
+
+    public IntSummaryStatistics getLeftLightSummary() {
+        return leftLightSummary;
+    }
+
+    public IntSummaryStatistics getRightLightSummary() {
+        return rightLightSummary;
     }
 }
