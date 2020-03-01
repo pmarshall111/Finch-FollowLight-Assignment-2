@@ -1,5 +1,6 @@
 package com.petermarshall.main;
 
+//Class is used to package all stats from a point in time in the same place.
 public class SpeedLightStats {
     private final long timestamp;
     private final int[] lightIntensity;

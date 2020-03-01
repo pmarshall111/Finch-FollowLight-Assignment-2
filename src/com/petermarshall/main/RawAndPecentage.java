@@ -1,6 +1,6 @@
 package com.petermarshall.main;
 
-//class is used to package light and wheel values from the Finch as percentages and raw values. 2 different types of percentages
+//Class is used to package light and wheel values from the Finch as percentages and raw values. 2 different types of percentages
 //included, percentage is the percentage of the way from the MIN val to the MAX val. posNegPercentage is only different from percentage
 //if the range from MIN to MAX crosses 0 i.e. -255 to 255. In this case, posNegPercentage will give the percentage from 0 to the MIN/MAX
 //value, with a raw val less than 0 giving a negative percentage.

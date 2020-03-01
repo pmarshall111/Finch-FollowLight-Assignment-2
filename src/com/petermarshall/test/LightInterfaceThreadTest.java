@@ -1,14 +1,12 @@
 package com.petermarshall.test;
 
-import com.petermarshall.main.FinchState;
-import com.petermarshall.main.LightInterfaceThread;
-import com.petermarshall.main.TimeHelper;
-import com.petermarshall.main.TimeInStates;
+import com.petermarshall.main.*;
 import edu.cmu.ri.createlab.terk.robot.finch.Finch;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.IntSummaryStatistics;
 
 import static org.junit.Assert.*;
@@ -25,153 +23,155 @@ public class LightInterfaceThreadTest {
 
     @After
     public void tearDown() {
+        interfaceThread.stopProgram();
         finch.quit();
     }
 
     @Test
     public void canStartProgram() {
-        assertFalse(interfaceThread.isRunning());
-        interfaceThread.start();
+        startInterfaceThread();
+        sleep(500);
         assertTrue(interfaceThread.isRunning());
     }
 
     @Test
     public void canStopProgram() {
-        interfaceThread.start();
+        startInterfaceThread();
+        sleep(500);
         interfaceThread.stopProgram();
+        sleep(500);
         assertFalse(interfaceThread.isRunning());
     }
 
     @Test
-    public void timeElapsedStartsAtZero() {
-        assertEquals(0, interfaceThread.getTimeElapsedInNS());
-    }
-
-    //TODO: add a bunch of tests such that if called before it's started, the result is 0.
-
-    @Test
     public void canGetTimeElapsed() {
         long startTime = System.nanoTime();
-        interfaceThread.start();
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        startInterfaceThread();
+        sleep(2000);
         long endTime = System.nanoTime();
-        long errorInNs = 500;
+        long errorInNs = 50000000; //50ms
         assertEquals(endTime-startTime, interfaceThread.getTimeElapsedInNS(), errorInNs);
     }
 
     @Test
     public void canGetLeftLightAtStart() {
-        interfaceThread.start();
+        startInterfaceThread();
         int finchLeftLight = finch.getLeftLightSensor();
-        assertEquals(finchLeftLight, interfaceThread.getLeftLightAtStart(), 1);
+        assertEquals(finchLeftLight, interfaceThread.getLeftLightAtStart(), 5);
     }
 
     @Test
     public void canGetRightLightAtStart() {
-        interfaceThread.start();
+        startInterfaceThread();
         int finchRightLight = finch.getRightLightSensor();
-        assertEquals(finchRightLight, interfaceThread.getRightLightAtStart(), 1);
+        assertEquals(finchRightLight, interfaceThread.getRightLightAtStart(), 5);
     }
 
     @Test
     public void canGetHighestLeftReading() {
-        interfaceThread.start();
+        startInterfaceThread();
         IntSummaryStatistics stats = new IntSummaryStatistics();
-        while (!TimeHelper.xSecondsPassed(System.nanoTime(), 10)) {
+        long prevTime = System.nanoTime();
+        while (!TimeHelper.xSecondsPassed(prevTime, 10)) {
             stats.accept(finch.getLeftLightSensor());
         }
-        assertEquals(stats.getMax(), interfaceThread.getHighestLeftLightReading(), 1);
+        assertEquals(stats.getMax(), interfaceThread.getHighestLeftLightReading(), 5);
     }
 
     @Test
     public void canGetHighestRightReading() {
-        interfaceThread.start();
+        startInterfaceThread();
         IntSummaryStatistics stats = new IntSummaryStatistics();
-        while (!TimeHelper.xSecondsPassed(System.nanoTime(), 10)) {
+        long prevTime = System.nanoTime();
+        while (!TimeHelper.xSecondsPassed(prevTime, 10)) {
             stats.accept(finch.getRightLightSensor());
         }
-        assertEquals(stats.getMax(), interfaceThread.getHighestRightLightReading(), 1);
+        assertEquals(stats.getMax(), interfaceThread.getHighestRightLightReading(), 5);
     }
 
     @Test
     public void canGetLowestLeftReading() {
-        interfaceThread.start();
+        startInterfaceThread();
         IntSummaryStatistics stats = new IntSummaryStatistics();
-        while (!TimeHelper.xSecondsPassed(System.nanoTime(), 10)) {
+        long prevTime = System.nanoTime();
+        while (!TimeHelper.xSecondsPassed(prevTime, 10)) {
             stats.accept(finch.getLeftLightSensor());
         }
-        assertEquals(stats.getMin(), interfaceThread.getLowestLeftLightReading(), 1);
+        assertEquals(stats.getMin(), interfaceThread.getLowestLeftLightReading(), 5);
     }
 
     @Test
     public void canGetLowestRightReading() {
-        interfaceThread.start();
+        startInterfaceThread();
         IntSummaryStatistics stats = new IntSummaryStatistics();
-        while (!TimeHelper.xSecondsPassed(System.nanoTime(), 10)) {
+        long prevTime = System.nanoTime();
+        while (!TimeHelper.xSecondsPassed(prevTime, 10)) {
             stats.accept(finch.getRightLightSensor());
         }
-        assertEquals(stats.getMin(), interfaceThread.getLowestRightLightReading(), 1);
+        assertEquals(stats.getMin(), interfaceThread.getLowestRightLightReading(), 5);
     }
 
     @Test
     public void canGetAvgLeftReading() {
-        interfaceThread.start();
+        startInterfaceThread();
         IntSummaryStatistics stats = new IntSummaryStatistics();
-        while (!TimeHelper.xSecondsPassed(System.nanoTime(), 10)) {
+        long prevTime = System.nanoTime();
+        while (!TimeHelper.xSecondsPassed(prevTime, 10)) {
             stats.accept(finch.getLeftLightSensor());
         }
-        assertEquals(stats.getAverage(), interfaceThread.getAverageLeftLightSensorReading(), 1);
+        assertEquals(stats.getAverage(), interfaceThread.getAverageLeftLightSensorReading(), 5);
     }
 
     @Test
     public void canGetAvgRightReading() {
-        interfaceThread.start();
+        startInterfaceThread();
         IntSummaryStatistics stats = new IntSummaryStatistics();
-        while (!TimeHelper.xSecondsPassed(System.nanoTime(), 10)) {
+        long prevTime = System.nanoTime();
+        while (!TimeHelper.xSecondsPassed(prevTime, 10)) {
             stats.accept(finch.getRightLightSensor());
         }
-        assertEquals(stats.getAverage(), interfaceThread.getAverageRightLightSensorReading(), 1);
+        assertEquals(stats.getAverage(), interfaceThread.getAverageRightLightSensorReading(), 5);
     }
 
     @Test
     public void canGetAvgOvrReading() {
-        interfaceThread.start();
+        startInterfaceThread();
         IntSummaryStatistics stats = new IntSummaryStatistics();
-        while (!TimeHelper.xSecondsPassed(System.nanoTime(), 10)) {
+        long prevTime = System.nanoTime();
+        while (!TimeHelper.xSecondsPassed(prevTime, 10)) {
             stats.accept(finch.getLeftLightSensor());
             stats.accept(finch.getRightLightSensor());
         }
-        assertEquals(stats.getAverage(), interfaceThread.getAverageLightSensorReading(), 1);
+        assertEquals(stats.getAverage(), interfaceThread.getAverageLightSensorReading(), 5);
     }
 
-    //TODO: manual test needed for can get number of detections. need to go and shine light and count.
-
-    //currentFinchState don't know how to test. manual test needed?
-
-    //probably needs a manual intervention such that a light is found. or alternatively a longer test period and hope that it does find a light.
     @Test
-    public void canGetTimeInEachState() {
-        interfaceThread.start();
-        TimeInStates time = new TimeInStates();
+    public void canGetListOfStats() {
+        startInterfaceThread();
         long prevTime = System.nanoTime();
-        FinchState currState = interfaceThread.getCurrentFinchState();
-        while (!TimeHelper.xSecondsPassed(System.nanoTime(), 10)) {
-            time.addTime(System.nanoTime() - prevTime, currState);
-            currState = interfaceThread.getCurrentFinchState();
-            prevTime = System.nanoTime();
+        while (!TimeHelper.xSecondsPassed(prevTime, 10)) {
+            //do nothing
         }
-        TimeInStates interfaceTime = interfaceThread.getTimeInEachState();
-
-        assertEquals(time.getFollowingTime(), interfaceTime.getFollowingTime(), 500);
-        assertEquals(time.getSearchingTime(), interfaceTime.getSearchingTime(), 500);
-        assertEquals(time.getWaitingTime(), interfaceTime.getWaitingTime(), 500);
-        assertEquals(time.getTotalRecordedTime(), interfaceTime.getTotalRecordedTime(), 1500);
+        ArrayList<SpeedLightStats> stats = interfaceThread.getStats();
+        SpeedLightStats firstStat = stats.get(0), lastStat = stats.get(stats.size()-1);
+        long timeElapsed = lastStat.getTimestamp() - firstStat.getTimestamp();
+        double timeInSecs = timeElapsed/Math.pow(10,9);
+        assertNotNull(stats);
+        assertTrue(stats.size() > 100);
+        assertEquals(10d, timeInSecs, 0.5); //comparison in secs
     }
 
+    //sleep used to give Java chance to set up and start new thread before continuing steps of test.
+    private void startInterfaceThread() {
+        interfaceThread.start();
+        sleep(200);
+    }
 
-    //final tests are to get latest stats for each bit and also to get stats array in general
+    private void sleep(int millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 }

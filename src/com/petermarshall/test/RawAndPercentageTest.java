@@ -1,7 +1,6 @@
 package com.petermarshall.test;
 
 import com.petermarshall.main.RawAndPecentage;
-import com.petermarshall.main.SearchForLight;
 import org.junit.Before;
 import org.junit.Test;
 

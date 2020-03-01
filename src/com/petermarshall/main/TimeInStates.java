@@ -1,6 +1,6 @@
 package com.petermarshall.main;
 
-//class takes in long values and adds them to the correct variable based on the state.
+//Class is used to count time based on the state the Finch is in.
 public class TimeInStates {
     private long followingTime;
     private long searchingTime;
